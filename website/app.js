@@ -20,7 +20,7 @@ const postData = async (url =' ', data = {}) => {
 
 /* Global Variables */
 const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '&units=imperial&appid=<YOUR_API>'; //set to imperial then add api
+const apiKey = '&units=imperial&appid=024db20323369000380081c865f243a7'; //set to imperial then add api
 
 // Create a new date instance dynamically with JS
 let d = new Date();
@@ -28,7 +28,6 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 //retrieve user input
 let feeling = document.getElementById('feelings').value;
-let zip = document.getElementById('zip').value;
 
 //entryholder divs
 const dateDiv = document.getElementById('date');
@@ -40,8 +39,9 @@ const retrieveData = async (baseUrl, zip, apiKey) => {
 	const request = await fetch(baseUrl + zip + apiKey);
 	
 	try {
-		const receivedData =  await request.json();
-		console.log(receivedData);
+		const receiveData =  await request.json();
+		console.log(receiveData);
+		return receiveData;
 	} catch (error) {
 		console.log('error', error);
 	}
@@ -49,8 +49,9 @@ const retrieveData = async (baseUrl, zip, apiKey) => {
 
 //CHAIN: post & get
 function postRetrieve() {
+	let zip = document.getElementById('zip').value;
 	retrieveData(baseUrl, zip, apiKey)
-	.then(function() {
+	.then(function(retrieveData) {
 		postData ('/data', {
 			temperature: retrieveData.id.main.temp, 
 			date: newDate, 
