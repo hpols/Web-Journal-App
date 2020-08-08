@@ -20,7 +20,7 @@ const postData = async (url =' ', data = {}) => {
 
 /* Global Variables */
 const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '&units=imperial&appid=024db20323369000380081c865f243a7'; //set to imperial then add api
+const apiKey = '&units=imperial&appid=<ADD YOUR OWN>'; //set to imperial then add api
 
 // Create a new date instance dynamically with JS
 let d = new Date();
