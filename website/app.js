@@ -20,7 +20,7 @@ const postData = async (url =' ', data = {}) => {
 
 /* Global Variables */
 const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '&units=imperial&appid=<ADD YOUR OWN>'; //set to imperial then add api
+const apiKey = '&units=imperial&appid=<YOUR_API>'; //set to imperial then add api
 
 // Create a new date instance dynamically with JS
 let d = new Date();
@@ -29,6 +29,11 @@ let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 //retrieve user input
 let feeling = document.getElementById('feelings').value;
 let zip = document.getElementById('zip').value;
+
+//entryholder divs
+const dateDiv = document.getElementById('date');
+const tempDiv = document.getElementById('temp');
+const contentDiv = document.getElementById('content');
 
 //ASYNC get
 const retrieveData = async (baseUrl, zip, apiKey) => {
@@ -44,15 +49,20 @@ const retrieveData = async (baseUrl, zip, apiKey) => {
 
 //CHAIN: post & get
 function postRetrieve() {
-	retrieveData(baseUrl, 94040, apiKey)
+	retrieveData(baseUrl, zip, apiKey)
 	.then(function() {
 		postData ('/data', {
-			temperature: retrieveData.main.temp, 
+			temperature: retrieveData.id.main.temp, 
 			date: newDate, 
 			userResponse: feeling
 		})
 		console.log(retrieveData)
 	})
+	.then(function() {
+		dateDiv.textContent = postData.date;
+		tempDiv.textContent = postData.temperature;
+		contentDiv.textContent = postData.userResponse;
+	})
 }
 
-postRetrieve();
+document.getElementById('generate').addEventListener('click', postRetrieve);
