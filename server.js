@@ -38,7 +38,12 @@ function sendData(req, res){
 //POST Route receiving: temperature – date – user response
 app.post('/add', callback);
 function callback(req, res){
-	res.send('POST received');
+	projectData = {
+		temperature: req.body.temperature,
+		date: req.body.date,
+		userResponse: req.body.userResponse
+	}
+	res.send(projectData);
 }
 
 //POST new data:

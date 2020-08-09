@@ -26,22 +26,34 @@ const apiKey = '&units=imperial&appid=024db20323369000380081c865f243a7'; //set t
 let d = new Date();
 let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
-//retrieve user input
-let feeling = document.getElementById('feelings').value;
-
 //entryholder divs
 const dateDiv = document.getElementById('date');
 const tempDiv = document.getElementById('temp');
 const contentDiv = document.getElementById('content');
 
-//ASYNC get
+//ASYNC get from API
 const retrieveData = async (baseUrl, zip, apiKey) => {
 	const request = await fetch(baseUrl + zip + apiKey);
 	
 	try {
-		const receiveData =  await request.json();
-		console.log(receiveData);
-		return receiveData;
+		const receivedData =  await request.json();
+		console.log(receivedData);
+		return receivedData;
+	} catch (error) {
+		console.log('error', error);
+	}
+}
+
+//ASYNC get from Local
+const updateUI = async () =>{
+	const uiRequest = await fetch('/all');
+	
+	try {
+		const localData = await uiRequest.json();
+		console.log(localData);
+		dateDiv.textContent = localData.date;
+		tempDiv.textContent = localData.temperature;
+		contentDiv.textContent = localData.userResponse;
 	} catch (error) {
 		console.log('error', error);
 	}
@@ -49,21 +61,19 @@ const retrieveData = async (baseUrl, zip, apiKey) => {
 
 //CHAIN: post & get
 function postRetrieve() {
+	//get user input
 	let zip = document.getElementById('zip').value;
-	retrieveData(baseUrl, zip, apiKey)
-	.then(function(retrieveData) {
-		postData ('/data', {
-			temperature: retrieveData.id.main.temp, 
+	let feeling = document.getElementById('feelings').value;
+	
+	retrieveData(baseUrl, zip, apiKey) //get data from api
+	.then(function(data) {
+		postData ('/data', { //bundle user data and api, and store
+			temperature: data.main.temp, 
 			date: newDate, 
 			userResponse: feeling
 		})
-		console.log(retrieveData)
 	})
-	.then(function() {
-		dateDiv.textContent = postData.date;
-		tempDiv.textContent = postData.temperature;
-		contentDiv.textContent = postData.userResponse;
-	})
-}
+	.then(updateUI('/data')) //get locally stored data and update ui
+	}
 
 document.getElementById('generate').addEventListener('click', postRetrieve);
