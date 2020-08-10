@@ -67,7 +67,7 @@ function postRetrieve() {
 	
 	retrieveData(baseUrl, zip, apiKey) //get data from api
 	.then(function(data) {
-		postData ('/data', { //bundle user data and api, and store
+		postData ('/add', { //bundle user data and api, and store
 			temperature: data.main.temp, 
 			date: newDate, 
 			userResponse: feeling
